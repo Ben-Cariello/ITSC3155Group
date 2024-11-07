@@ -6,17 +6,36 @@
 <style>
     .room-container{
         display: grid;
-        grid-template-columns: 3fr 1fr;;
+        grid-template-columns: 1fr 3fr;;
     }
 </style>
 
 <div class="room-container">
+    <!--Left side community tab to who has commented about the community-->
+    <div>
+        <h1>Community</h1>
+        <hr>
+
+        {% for user in participants %}
+
+        <div>
+            <p>@{{user.username}}</p>
+        </div>
+
+        {% endfor %}
+    </div>
 
     <div>
+
+
+
         <h1>{{room.name}}</h1>
 
 
         <p>{{room.description}}</p>
+
+
+
 
 
         <div class="comment-wrapper">
@@ -48,18 +67,7 @@
         {% endif %}
     </div>  
 
-    <div>
-        <h3>Participants</h3>
-        <hr>
-
-        {% for user in participants %}
-
-        <div>
-            <p>@{{user.username}}</p>
-        </div>
-
-        {% endfor %}
-    </div>
+   
 
 </div>
 
