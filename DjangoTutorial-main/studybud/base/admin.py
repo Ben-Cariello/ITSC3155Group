@@ -2,9 +2,9 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Room, Topic, Message
+from .models import Job, Field, Message
 
-admin.site.register(Room)
-admin.site.register(Topic)
+admin.site.register(Job)
+admin.site.register(Field)
 admin.site.register(Message)
 

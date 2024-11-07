@@ -1,7 +1,7 @@
 from django.forms import ModelForm
-from .models import Room
+from .models import Job
 
-class RoomForm(ModelForm):
+class JobForm(ModelForm):
     class Meta:
-        model = Room
+        model = Job
         fields = '__all__'
