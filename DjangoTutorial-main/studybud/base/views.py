@@ -6,8 +6,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .models import Room, Topic, Message
-from .forms import RoomForm
+from .models import Job, Field, Message
+from .forms import JobForm
 
 # Create your views here.
 
@@ -75,58 +75,58 @@ def registerPage(request):
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
-    rooms = Room.objects.filter(Q(topic__name__icontains=q) |
+    jobs = Job.objects.filter(Q(field__name__icontains=q) |
                                  Q(name__icontains=q) |
                                    Q(description__icontains=q) 
     )
 
-    topics = Topic.objects.all()
-    room_count = rooms.count()
-    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q))
+    fields = Field.objects.all()
+    job_count = jobs.count()
+    job_messages = Message.objects.filter(Q(job__field__name__icontains=q))
 
 
 
-    context = {'rooms': rooms, 'topics':topics, 
-               'room_count':room_count, 'room_messages': room_messages}
+    context = {'jobs': jobs, 'fields':fields, 
+               'job_count':job_count, 'job_messages': job_messages}
     return render(request, 'base/home.html', context)
 
-def room(request, pk):
-    room = Room.objects.get(id=pk)
-    room_messages = room.message_set.all()
-    participants = room.participants.all()
+def job(request, pk):
+    job = Job.objects.get(id=pk)
+    job_messages = job.message_set.all()
+    participants = job.participants.all()
 
 
     if request.method == 'POST':
         message = Message.objects.create(
             user=request.user,
-            room=room,
+            job=job,
             body=request.POST.get('body')
         )
-        room.participants.add(request.user)
-        return redirect('room', pk=room.id)
+        job.participants.add(request.user)
+        return redirect('job', pk=job.id)
 
 
-    context = {'room': room, 'room_messages':room_messages, 'participants':participants}
-    return render(request, 'base/room.html', context)
+    context = {'job': job, 'job_messages':job_messages, 'participants':participants}
+    return render(request, 'base/job.html', context)
 
 
 def userProfile(request, pk):
     user = User.objects.get(id=pk)
-    rooms = user.room_set.all()
-    room_messages = user.message_set.all()
-    topics = Topic.objects.all()
+    jobs = user.job_set.all()
+    job_messages = user.message_set.all()
+    fields = Field.objects.all()
     
 
-    context = {'user':user, 'rooms':rooms, 'room_messages':room_messages, 'topics':topics}
+    context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields}
     return render(request, 'base/profile.html', context)
 
 
 
 @login_required(login_url='login')
 def createRoom(request):
-    form = RoomForm()
+    form = JobForm()
     if request.method == 'POST':
-        form = RoomForm(request.POST)
+        form = JobForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -137,14 +137,14 @@ def createRoom(request):
 
 @login_required(login_url='login')
 def updateRoom(request, pk):
-    room = Room.objects.get(id=pk)
-    form = RoomForm(instance=room)
+    job = Job.objects.get(id=pk)
+    form = JobForm(instance=job)
 
-    if request.user != room.host:
+    if request.user != job.host:
         return HttpResponse('You are not allowed here!!')
 
     if request.method == 'POST':
-        form = RoomForm(request.POST, instance=room)
+        form = JobForm(request.POST, instance=job)
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -156,17 +156,17 @@ def updateRoom(request, pk):
 
 @login_required(login_url='login')
 def deleteRoom(request, pk):
-    room = Room.objects.get(id=pk)
+    job = Job.objects.get(id=pk)
 
-    if request.user != room.host:
+    if request.user != job.host:
         return HttpResponse('You are not allowed here!!')
     
 
     if request.method == 'POST':
-        room.delete()
+        job.delete()
         return redirect('home')
 
-    return render(request, 'base/delete.html', {'obj':room})
+    return render(request, 'base/delete.html', {'obj':job})
 
 @login_required(login_url='login')
 def deleteMessage(request, pk):

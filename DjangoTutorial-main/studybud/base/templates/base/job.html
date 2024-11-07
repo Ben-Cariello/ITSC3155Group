@@ -13,14 +13,14 @@
 <div class="room-container">
 
     <div>
-        <h1>{{room.name}}</h1>
+        <h1>{{job.name}}</h1>
 
 
-        <p>{{room.description}}</p>
+        <p>{{job.description}}</p>
 
 
         <div class="comment-wrapper">
-            <h3>Conversation</h3>
+            <h3>Apply</h3>
             <hr>
 
             {% for message in room_messages %}
@@ -39,26 +39,27 @@
         </div>
 
         {% if request.user.is_authenticated %}
-        <div class="comment-form">
+        <div class="job-form">
             <form method="POST" action="">
                 {% csrf_token %}
-                <input type="text" name="body" placeholder="Write your message here..." />
+                <label for = "resume">Upload Resume: </label>
+                <input name="resume" type="file"/>
             </form>
         </div>
         {% endif %}
     </div>  
 
     <div>
-        <h3>Participants</h3>
+        <h3>Related Companies</h3>
         <hr>
 
-        {% for user in participants %}
+       <!--{% for user in participants %} 
 
         <div>
-            <p>@{{user.username}}</p>
+            <p>{{user.username}}</p>
         </div>
 
-        {% endfor %}
+        {% endfor %} --> 
     </div>
 
 </div>
