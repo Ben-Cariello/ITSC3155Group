@@ -11,8 +11,6 @@ class Field(models.Model):
    def __str__(self):
       return self.name
 
-
-
 class Job(models.Model):
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     field = models.ForeignKey(Field, on_delete=models.SET_NULL, null=True)
