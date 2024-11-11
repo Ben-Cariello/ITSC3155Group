@@ -15,7 +15,45 @@
 </style>
 
 
-<h1>{{user.username}}</h1>
+<h1>{{ user.username }}'s Profile</h1>
+
+{% if request.user == user %}
+    <a href="{% url 'edit-profile' user.id %}">Edit Profile</a>
+{% endif %}
+
+
+<p>Email: {{ email }}</p>
+<p>First Name: {{ first_name }}</p>
+<p>Last Name: {{ last_name }}</p>
+
+
+<h3>Jobs Posted:</h3>
+{% if jobs %}
+    <ul>
+        {% for job in jobs %}
+
+            <li><a href="{% url 'job' job.id %}">{{ job.name }}</a></li>
+
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No jobs posted yet.</p>
+{% endif %}
+
+
+<h3>Messages:</h3>
+{% if job_messages %}
+    <ul>
+        {% for message in job_messages %}
+
+            <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
+
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No messages.</p>
+{% endif %}
+
 
 <div class="profile-container">
     <div>

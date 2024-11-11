@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 from .models import Job, Field, Message
 from .forms import JobForm
 
@@ -56,10 +57,10 @@ def logoutUser(request):
     return redirect('home')
     
 def registerPage(request):
-    form = UserCreationForm()
+    form = CustomUserCreationForm()
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -116,9 +117,30 @@ def userProfile(request, pk):
     job_messages = user.message_set.all()
     fields = Field.objects.all()
     
+    email = user.email
+  
+    first_name = user.first_name
+    last_name = user.last_name
 
-    context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields}
+
+
+    context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields,           
+               'email': email, 'first_name': first_name, 'last_name': last_name,}
+
     return render(request, 'base/profile.html', context)
+
+@login_required
+def editProfile(request, pk):
+    user = User.objects.get(id=pk)
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user-profile', pk=user.id)
+    else:
+        form = CustomUserCreationForm(instance=user)
+    
+    return render(request, 'base/edit_profile.html', {'form': form})
 
 
 
