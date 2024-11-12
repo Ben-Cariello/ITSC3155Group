@@ -26,20 +26,28 @@
     </div>
 
     <div>
+<<<<<<< HEAD:DjangoTutorial-main/studybud/base/templates/base/room.html
 
 
 
         <h1>{{room.name}}</h1>
+=======
+        <h1>{{job.name}}</h1>
+>>>>>>> 1d6f411c2085b217be4d7166c19b8b775980de68:DjangoTutorial-main/studybud/base/templates/base/job.html
 
 
-        <p>{{room.description}}</p>
+        <p>{{job.description}}</p>
 
 
 
 
 
         <div class="comment-wrapper">
+<<<<<<< HEAD:DjangoTutorial-main/studybud/base/templates/base/room.html
             <h3>Job Details</h3>
+=======
+            <h3>Apply</h3>
+>>>>>>> 1d6f411c2085b217be4d7166c19b8b775980de68:DjangoTutorial-main/studybud/base/templates/base/job.html
             <hr>
 
             {% for message in room_messages %}
@@ -58,16 +66,32 @@
         </div>
 
         {% if request.user.is_authenticated %}
-        <div class="comment-form">
+        <div class="job-form">
             <form method="POST" action="">
                 {% csrf_token %}
-                <input type="text" name="body" placeholder="Write your message here..." />
+                <label for = "resume">Upload Resume: </label>
+                <input name="resume" type="file"/>
             </form>
         </div>
         {% endif %}
     </div>  
 
+<<<<<<< HEAD:DjangoTutorial-main/studybud/base/templates/base/room.html
    
+=======
+    <div>
+        <h3>Related Companies</h3>
+        <hr>
+
+       <!--{% for user in participants %} 
+
+        <div>
+            <p>{{user.username}}</p>
+        </div>
+
+        {% endfor %} --> 
+    </div>
+>>>>>>> 1d6f411c2085b217be4d7166c19b8b775980de68:DjangoTutorial-main/studybud/base/templates/base/job.html
 
 </div>
 

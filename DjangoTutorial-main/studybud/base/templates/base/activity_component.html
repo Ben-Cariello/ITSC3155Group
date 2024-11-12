@@ -1,9 +1,9 @@
-<h3>Recent Activity</h3>
+<h3>New Listings!</h3>
         <hr>
-        {% for message in room_messages %}
+        {% for message in job_messages %}
         <div>
-            <small><a href="{% url 'user-profile' message.user.id %}">@{{message.user}}</a> {{message.created|timesince}}</small>
-            <small>replied to "{{message.room}}" </small>
+            <small><a href="{% url 'user-profile' message.user.id %}">Company: {{message.user}}</a><br>Posted: {{message.created|timesince}} ago</small>
+            <!--<small>replied to "{{message.job}}" </small>-->
 
             <p>{{message}}</p>
             {% if request.user == message.user %}
