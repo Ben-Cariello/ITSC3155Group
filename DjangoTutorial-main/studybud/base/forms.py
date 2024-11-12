@@ -1,6 +1,5 @@
 from django.forms import ModelForm
-from .models import Job
-
+from .models import Job, UserProfile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -15,6 +14,23 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+
+class ResumeForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['resume']
+
+class CustomUserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+    
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        user = self.instance
+        if User.objects.filter(username=username).exclude(id=user.id).exists():
+            raise forms.ValidationError("Username already exists")
+        return username
 
 class JobForm(ModelForm):
     class Meta:
