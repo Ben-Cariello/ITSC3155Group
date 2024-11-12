@@ -2,18 +2,14 @@
 
 {% block content %}
 
-
 <style>
 
     .profile-container{
-
         display: grid;
         grid-template-columns: 1fr 2fr 1fr;
     }
 
-
 </style>
-
 
 <h1>{{ user.username }}'s Profile</h1>
 
@@ -21,54 +17,60 @@
     <a href="{% url 'edit-profile' user.id %}">Edit Profile</a>
 {% endif %}
 
-
 <p>Email: {{ email }}</p>
 <p>First Name: {{ first_name }}</p>
 <p>Last Name: {{ last_name }}</p>
 
+<h3>Resume:</h3>
+
+    {% if profile.resume %}
+
+        <p>Resume: <a href="{{ profile.resume.url }}" target="_blank">Download Resume</a></p>
+
+    {% else %}
+
+        <p>No resume uploaded yet.</p>
+
+    {% endif %}
+
+    {% if request.user == user %}
+
+        <h3>Upload or Edit Resume:</h3>
+
+        <div class="job-form">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Upload Resume</button>
+            </form>
+        </div>
+
+    {% endif %}
 
 <h3>Jobs Posted:</h3>
-{% if jobs %}
-    <ul>
-        {% for job in jobs %}
-
-            <li><a href="{% url 'job' job.id %}">{{ job.name }}</a></li>
-
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No jobs posted yet.</p>
-{% endif %}
-
+    {% if jobs %}
+        <ul>
+            {% for job in jobs %}
+                <li><a href="{% url 'job' job.id %}">{{ job.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No jobs posted yet.</p>
+    {% endif %}
 
 <h3>Messages:</h3>
-{% if job_messages %}
-    <ul>
-        {% for message in job_messages %}
+    {% if job_messages %}
+        <ul>
+            {% for message in job_messages %}
+                <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No messages.</p>
+    {% endif %}
 
-            <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
-
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No messages.</p>
-{% endif %}
-
-
-<div class="profile-container">
-    <div>
-        {% include 'base/field_component.html' %}
-    </div>
-
-    <div>
-        {% include 'base/feed_component.html' %}
-    </div>
-        
-    <div>
-
-        {% include 'base/activity_component.html' %}
-    </div>
-</div>
-
+    <script>
+        document.querySelector('input[type="file"]').setAttribute('accept', '.pdf');
+    </script>
 
 {% endblock content %}

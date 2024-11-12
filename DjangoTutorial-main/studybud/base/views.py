@@ -6,9 +6,9 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm
-from .models import Job, Field, Message
-from .forms import JobForm
+from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm
+from .models import Job, Field, Message, UserProfile
+
 
 # Create your views here.
 
@@ -111,34 +111,47 @@ def job(request, pk):
     return render(request, 'base/job.html', context)
 
 
+@login_required
 def userProfile(request, pk):
     user = User.objects.get(id=pk)
     jobs = user.job_set.all()
     job_messages = user.message_set.all()
     fields = Field.objects.all()
+
+    profile, created = UserProfile.objects.get_or_create(user=user)
     
     email = user.email
-  
     first_name = user.first_name
     last_name = user.last_name
 
-
+    if request.user == user:
+        if request.method == 'POST':
+            form = ResumeForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                form.save() 
+                return redirect('user-profile', pk=user.id)  
+        else:
+            form = ResumeForm(instance=profile)  
+    else:
+        form = None
 
     context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields,           
-               'email': email, 'first_name': first_name, 'last_name': last_name,}
+               'email': email, 'first_name': first_name, 'last_name': last_name, 
+               'form': form, 'profile': profile}
 
     return render(request, 'base/profile.html', context)
 
 @login_required
 def editProfile(request, pk):
     user = User.objects.get(id=pk)
+    
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, instance=user)
+        form = CustomUserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user-profile', pk=user.id)
     else:
-        form = CustomUserCreationForm(instance=user)
+        form = CustomUserEditForm(instance=user)
     
     return render(request, 'base/edit_profile.html', {'form': form})
 
