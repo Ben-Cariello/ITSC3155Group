@@ -46,14 +46,10 @@ class Message(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     resume = models.FileField(upload_to='resumes/', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='default.jpg', null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
-    
-class CustomUserEditForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

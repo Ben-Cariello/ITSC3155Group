@@ -1,4 +1,5 @@
 {% extends 'main.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -17,9 +18,18 @@
     <a href="{% url 'edit-profile' user.id %}">Edit Profile</a>
 {% endif %}
 
-<p>Email: {{ email }}</p>
-<p>First Name: {{ first_name }}</p>
-<p>Last Name: {{ last_name }}</p>
+<div>
+    {% if user.userprofile and user.userprofile.profile_picture %}
+    <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture">
+    {% else %}
+        <img src="{% static 'default.jpg' %}" alt="Default Profile Picture">
+    {% endif %}
+
+</div>
+
+<p>Email: {{ user.email }}</p>
+<p>First Name: {{ user.first_name }}</p>
+<p>Last Name: {{ user.last_name }}</p>
 
 <h3>Resume:</h3>
 
@@ -40,7 +50,7 @@
         <div class="job-form">
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ resume_form.as_p }}
                 <button type="submit">Upload Resume</button>
             </form>
         </div>

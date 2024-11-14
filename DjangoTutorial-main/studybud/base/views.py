@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm
+from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm, ProfilePictureForm
 from .models import Job, Field, Message, UserProfile
 
 
@@ -126,34 +126,57 @@ def userProfile(request, pk):
 
     if request.user == user:
         if request.method == 'POST':
-            form = ResumeForm(request.POST, request.FILES, instance=profile)
-            if form.is_valid():
-                form.save() 
+            resume_form = ResumeForm(request.POST, request.FILES, instance=profile)
+            if resume_form.is_valid():
+                resume_form.save() 
                 return redirect('user-profile', pk=user.id)  
         else:
-            form = ResumeForm(instance=profile)  
+            resume_form = ResumeForm(instance=profile)  
     else:
-        form = None
+        resume_form = None
 
     context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields,           
                'email': email, 'first_name': first_name, 'last_name': last_name, 
-               'form': form, 'profile': profile}
+               'resume_form': resume_form, 'profile': profile}
 
     return render(request, 'base/profile.html', context)
 
 @login_required
+def profile_update(request):
+    if request.method == 'POST':
+        profile_form = ProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('profile')  
+    else:
+        profile_form = ProfilePictureForm(instance=request.user.profile)
+    return render(request, 'profile.html', {'profile_form': profile_form})
+
+@login_required
 def editProfile(request, pk):
     user = User.objects.get(id=pk)
+    user_profile = user.userprofile
     
     if request.method == 'POST':
-        form = CustomUserEditForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
+        user_form = CustomUserEditForm(request.POST, instance=user)
+        profile_form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user_form.save()
+            profile_form.save()
             return redirect('user-profile', pk=user.id)
     else:
-        form = CustomUserEditForm(instance=user)
+        user_form = CustomUserEditForm(instance=user)
+        profile_form = ProfilePictureForm(instance=user_profile)
     
-    return render(request, 'base/edit_profile.html', {'form': form})
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user': user,
+    }
+
+    return render(request, 'base/edit_profile.html', context)
 
 
 
