@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.conf import Settings
-from PIL import Image
+from PIL import Image, ExifTags
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
@@ -47,27 +47,48 @@ class ProfilePictureForm(forms.ModelForm):
         profile_picture = self.cleaned_data.get('profile_picture')
 
         if profile_picture:
-            max_size = 5 * 320 * 320  # 5 MB size limit (adjust as needed)
+            max_size = 5 * 320 * 320  # 5 MB size limit
+            max_width = 320  # Max width
+            max_height = 320  # Max height
 
-            # If the image is larger than the max size, resize it
-            if profile_picture.size > max_size:
-                image = Image.open(profile_picture)
-                
-                # Resize the image (keep aspect ratio)
-                max_width = 320  # Set the maximum width
-                max_height = 320  # Set the maximum height
+            # Load the image
+            image = Image.open(profile_picture)
+
+            # Convert to RGB if needed
+            if image.mode in ("RGBA", "P"):  # Handle alpha or palette-based images
+                image = image.convert("RGB")
+            
+            # Handle EXIF orientation if present
+            try:
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                exif = image._getexif()
+                if exif and orientation in exif:
+                    if exif[orientation] == 3:
+                        image = image.rotate(180, expand=True)
+                    elif exif[orientation] == 6:
+                        image = image.rotate(270, expand=True)
+                    elif exif[orientation] == 8:
+                        image = image.rotate(90, expand=True)
+            except (AttributeError, KeyError, IndexError):
+                # No EXIF data; skip adjustment
+                pass
+
+            # Resize the image if it exceeds the dimensions
+            if profile_picture.size > max_size or image.size[0] > max_width or image.size[1] > max_height:
                 image.thumbnail((max_width, max_height))
 
-                # Save the resized image back to the file
-                new_image = BytesIO()
-                image.save(new_image, format='JPEG')  # or use PNG if needed
-                new_image.seek(0)
+            # Save the resized image to a new file
+            new_image = BytesIO()
+            image.save(new_image, format='JPEG', optimize=True)
+            new_image.seek(0)
 
-                # Create a new InMemoryUploadedFile with the resized image
-                profile_picture = InMemoryUploadedFile(
-                    new_image, 'ImageField', profile_picture.name,
-                    'image/jpeg', new_image.tell(), None
-                )
+            # Replace the uploaded file with the resized image
+            profile_picture = InMemoryUploadedFile(
+                new_image, 'ImageField', profile_picture.name,
+                'image/jpeg', new_image.tell(), None
+            )
 
         return profile_picture
 
