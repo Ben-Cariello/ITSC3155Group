@@ -38,28 +38,19 @@
             {% endfor %}
         </div>
 
-        {% if request.user.is_authenticated %}
-        <div class="job-form">
-            <form method="POST" action="">
-                {% csrf_token %}
-                <label for = "resume">Upload Resume: </label>
-                <input name="resume" type="file"/>
-            </form>
-        </div>
-        {% endif %}
     </div>  
 
     <div>
         <h3>Related Companies</h3>
         <hr>
 
-       <!--{% for user in participants %} 
+       {% for user in participants %} 
 
         <div>
             <p>{{user.username}}</p>
         </div>
 
-        {% endfor %} --> 
+        {% endfor %} 
     </div>
 
 </div>
