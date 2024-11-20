@@ -10,15 +10,26 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 # Editted Registration
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
-    
     first_name = forms.CharField(max_length=100, required=True)
     last_name = forms.CharField(max_length=100, required=True)
+    user_type = forms.ChoiceField(choices=UserProfile.USER_TYPE_CHOICES, label="Which best describes you?", widget=forms.RadioSelect)
 
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            UserProfile.objects.create(
+                user=user,
+                user_type=self.cleaned_data['user_type']
+            )
+        return user
 
 class ResumeForm(forms.ModelForm):
     class Meta:

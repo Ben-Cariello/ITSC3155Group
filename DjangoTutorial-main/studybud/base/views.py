@@ -108,7 +108,7 @@ def job(request, pk):
 
 
     context = {'job': job, 'job_messages':job_messages, 'participants':participants}
-    return render(request, 'base/job.html', context)
+    return render(request, 'base/create_job.html', context)
 
 
 @login_required
