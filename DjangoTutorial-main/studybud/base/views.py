@@ -108,7 +108,7 @@ def job(request, pk):
 
 
     context = {'job': job, 'job_messages':job_messages, 'participants':participants}
-    return render(request, 'base/create_job.html', context)
+    return render(request, 'base/job_view.html', context)
 
 
 @login_required
@@ -139,7 +139,7 @@ def userProfile(request, pk):
                'email': email, 'first_name': first_name, 'last_name': last_name, 
                'resume_form': resume_form, 'profile': profile}
 
-    return render(request, 'base/profile.html', context)
+    return render(request, 'base/employee_profile.html', context)
 
 @login_required
 def profile_update(request):
@@ -150,7 +150,7 @@ def profile_update(request):
             return redirect('profile')  
     else:
         profile_form = ProfilePictureForm(instance=request.user.profile)
-    return render(request, 'profile.html', {'profile_form': profile_form})
+    return render(request, 'employee_profile.html', {'profile_form': profile_form})
 
 @login_required
 def editProfile(request, pk):
@@ -177,8 +177,6 @@ def editProfile(request, pk):
     }
 
     return render(request, 'base/edit_profile.html', context)
-
-
 
 @login_required(login_url='login')
 def createRoom(request):
