@@ -6,8 +6,9 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .models import Job, Field, Message
-from .forms import JobForm
+from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm, ProfilePictureForm
+from .models import Job, Field, Message, UserProfile
+
 
 # Create your views here.
 
@@ -56,10 +57,10 @@ def logoutUser(request):
     return redirect('home')
     
 def registerPage(request):
-    form = UserCreationForm()
+    form = CustomUserCreationForm()
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
@@ -107,18 +108,75 @@ def job(request, pk):
 
 
     context = {'job': job, 'job_messages':job_messages, 'participants':participants}
-    return render(request, 'base/job.html', context)
+    return render(request, 'base/create_job.html', context)
 
 
+@login_required
 def userProfile(request, pk):
     user = User.objects.get(id=pk)
     jobs = user.job_set.all()
     job_messages = user.message_set.all()
     fields = Field.objects.all()
-    
 
-    context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields}
+    profile, created = UserProfile.objects.get_or_create(user=user)
+    
+    email = user.email
+    first_name = user.first_name
+    last_name = user.last_name
+
+    if request.user == user:
+        if request.method == 'POST':
+            resume_form = ResumeForm(request.POST, request.FILES, instance=profile)
+            if resume_form.is_valid():
+                resume_form.save() 
+                return redirect('user-profile', pk=user.id)  
+        else:
+            resume_form = ResumeForm(instance=profile)  
+    else:
+        resume_form = None
+
+    context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields,           
+               'email': email, 'first_name': first_name, 'last_name': last_name, 
+               'resume_form': resume_form, 'profile': profile}
+
     return render(request, 'base/profile.html', context)
+
+@login_required
+def profile_update(request):
+    if request.method == 'POST':
+        profile_form = ProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('profile')  
+    else:
+        profile_form = ProfilePictureForm(instance=request.user.profile)
+    return render(request, 'profile.html', {'profile_form': profile_form})
+
+@login_required
+def editProfile(request, pk):
+    user = User.objects.get(id=pk)
+    user_profile = user.userprofile
+    
+    if request.method == 'POST':
+        user_form = CustomUserEditForm(request.POST, instance=user)
+        profile_form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user_form.save()
+            profile_form.save()
+            return redirect('user-profile', pk=user.id)
+    else:
+        user_form = CustomUserEditForm(instance=user)
+        profile_form = ProfilePictureForm(instance=user_profile)
+    
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user': user,
+    }
+
+    return render(request, 'base/edit_profile.html', context)
 
 
 
