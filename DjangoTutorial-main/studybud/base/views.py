@@ -107,7 +107,7 @@ def job(request, pk):
         return redirect('job', pk=job.id)
 
 
-    context = {'job': job, 'job_messages':job_messages, 'participants':participants}
+    context = {'job': job, 'job_messages':job_messages, 'parti6tcipants':participants}
     return render(request, 'base/job_view.html', context)
 
 
