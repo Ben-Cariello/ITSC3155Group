@@ -2,8 +2,8 @@
     {% for job in jobs %}
         <div>
             {% if request.user == job.host %}
-            <a href="{% url 'update-job' job.id %}">Edit</a>
-            <a href="{% url 'delete-job' job.id %}">Delete</a>
+            <a href="{% url 'update-Job' job.id %}">Edit</a>
+            <a href="{% url 'delete-Job' job.id %}">Delete</a>
             {% endif %}
 
             <a href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
