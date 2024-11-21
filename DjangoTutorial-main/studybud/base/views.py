@@ -179,7 +179,7 @@ def editProfile(request, pk):
     return render(request, 'base/edit_profile.html', context)
 
 @login_required(login_url='login')
-def createRoom(request):
+def createJob(request):
     form = JobForm()
     if request.method == 'POST':
         form = JobForm(request.POST)
@@ -192,7 +192,7 @@ def createRoom(request):
 
 
 @login_required(login_url='login')
-def updateRoom(request, pk):
+def updateJob(request, pk):
     job = Job.objects.get(id=pk)
     form = JobForm(instance=job)
 
@@ -211,7 +211,7 @@ def updateRoom(request, pk):
 
 
 @login_required(login_url='login')
-def deleteRoom(request, pk):
+def deleteJob(request, pk):
     job = Job.objects.get(id=pk)
 
     if request.user != job.host:
