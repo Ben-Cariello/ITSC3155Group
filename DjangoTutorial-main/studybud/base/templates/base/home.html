@@ -24,19 +24,13 @@
     <div>
         <h5>{{job_count}} jobs found!</h5>
         <a href="{% url 'create-room' %}"></a>
-<<<<<<< Updated upstream
-
-        {% include 'base/feed_component.html' %}
-       
-=======
         <section id = "swipeBar">
             <div class='swipeDiv'>
                 <button class = "swipeButton" id = "leftButton">Left</button>
                 <button class = "swipeButton" id = "rightButton">Right</button>
-                {% include 'base/job_list.html' %}
+              
             </div>
         </section>
->>>>>>> Stashed changes
     </div>
 
     </div>
@@ -45,5 +39,5 @@
 </div>
 {% load static %}
 
-<script src="{% static 'scripts/swipe.js' %}"></script>
+<script src="{% static 'swipe.js' %}"></script>
 {% endblock content %}

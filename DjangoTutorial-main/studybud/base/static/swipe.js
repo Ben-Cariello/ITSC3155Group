@@ -4,11 +4,11 @@ let startX = 0;
 let endX = 0;
 const leftButton = document.querySelector('#leftButton');
 const rightButton = document.querySelector('#rightButton');;
-var bar = document.getElementById('swipeBar');
+const bar = document.getElementById('swipeBar');
 
 
 //Check which way they are swiping
-/*function checkDirection(){
+function checkDirection(){
     if (startX < endX) {
       rightButton.click();  
     }
@@ -17,14 +17,14 @@ var bar = document.getElementById('swipeBar');
     }
 }
 //Gets start of swipe 
-bar.addEventListener("touchstart", (e) => {
+bar.addEventListener("mousedown", (e) => {
     startX = e.changedTouches[0].screenX;
 });
 //Gets end of swipe and calls checkdriection function
-bar.addEventListener("touchend", (e) =>{
+bar.addEventListener("mouseup", (e) =>{
     endX = e.changedTouches[0].screenX;
     checkDirection();
-});*/
+});
 
 //button clicks
 leftButton.addEventListener("click", function(){
