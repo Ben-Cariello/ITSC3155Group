@@ -1,7 +1,20 @@
+<style>
+    h1{
+        text-align: center;
+        color:red
+    }
+    h1::after{
+        color:red;
+    }
+    .h1Class {
+        background-color: rgb(30, 129, 209);
+    }
+</style>
+<div class = "h1Class">
 <a href="/">
     <h1>JobSwipe</h1>
 </a>
-
+</div>
 <form method="GET" action="{% url 'home' %}">
     <input type="text" name="q" placeholder="Search Jobs..."/>
 
