@@ -20,16 +20,16 @@ img {
 }
 
 .job-container {
-    display: none; /* Initially hide all jobs */
+    display: none; 
 }
 
 .job-container.active {
-    display: block; /* Show only the active job */
+    display: block; 
 }
 </style>
 
 <div>
-    <!-- Loop through all jobs -->
+
     {% for job in jobs %}
     <div class="job-container">
         {% if request.user == job.host %}
@@ -41,18 +41,15 @@ img {
         <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
         <small>{{job.field.name}}</small>
         <hr>
-        
-        <!-- Buttons to swipe -->
         <button class="swipeButton" id="leftButton"><img src="{% static 'images/redX.jpg' %}"></button>
         <button class="swipeButton" id="rightButton"><img src="{% static 'images/greenCheck.jpg' %}"></button>
-        <p id="test"></p>
     </div>
     {% endfor %}
 
     <script>
     // Variables
-    const jobContainers = document.querySelectorAll('.job-container'); // Get all job containers
-    let currentJobIndex = 0; // Start with the first job
+    const jobContainers = document.querySelectorAll('.job-container'); 
+    let currentJobIndex = 0; 
 
     // Show the first job
     jobContainers[currentJobIndex].classList.add('active');
@@ -65,14 +62,14 @@ img {
     denyBut.onclick = denyApp;
     acceptBut.onclick = acceptApp;
 
-    // Deny application (move to next job)
+    // Deny application
     function denyApp() {
         jobContainers[currentJobIndex].classList.remove('active');
         currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
         jobContainers[currentJobIndex].classList.add('active');
     }
 
-    // Accept application (move to next job)
+    // Accept application 
     function acceptApp() {
         jobContainers[currentJobIndex].classList.remove('active');
         currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
