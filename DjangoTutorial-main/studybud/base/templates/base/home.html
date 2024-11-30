@@ -1,18 +1,26 @@
 {% extends 'main.html' %}
 
 {% block content %}
+{% load static %}
 
 <style>
-    .home-container{
-        display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
+    
+    .swipeButton{
+        width: 200px;
+        height: 150px;
     }
-    #swipeBar{
-        height: 500px;
-        width: 1000px;
-        background-color: green;
-        text-align: center;
-        cursor: pointer;
+    #leftButton{
+        margin-right: 250px;
+    }
+    #rightButton{
+        margin-left: 250px;
+    }
+    img{
+        width:200px;
+        height:150px;
+    }
+    .jobFeed{
+        border: 1px solid black;
     }
 </style>
 
@@ -25,13 +33,16 @@
     <div>
         <h5>{{job_count}} jobs found!</h5>
         <a href="{% url 'create-room' %}"></a>
-        <section id = "swipeBar">
-            <div class='swipeDiv'>
-                <!--{for each job listing} -->
-                <div>
-
-                </div>
+            
+        <div class="jobFeed">
+            <div>
+                {% include 'base/feed_component.html' %}
             </div>
+            <button class="swipeButton" id="leftButton"><img src="{% static 'images/redX.jpg' %}"></button>
+            <button class="swipeButton" id="rightButton"><img src="{% static 'images/greenCheck.jpg' %}"></button>
+            <p id="test"></p>
+        </div>
+
         </section>
     </div>
 
@@ -40,6 +51,8 @@
     
 </div>
 {% load static %}
-<script src="{% static 'swipe.js' %}"></script>
+<script src="{% static 'scripts/swipe.js' %}"
+
+></script>
 
 {% endblock content %}

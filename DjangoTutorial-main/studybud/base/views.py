@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .models import Job, Field, Message
 from .forms import JobForm
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -18,6 +19,10 @@ from .forms import JobForm
   #  {'id':3, 'name':'Frontend developers'},
 #]
 
+
+def get_data(request):
+    data = list(Job.objects.values())  # Convert queryset to list
+    return JsonResponse(data, safe=False)
 
 
 def loginPage(request):
