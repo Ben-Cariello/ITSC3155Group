@@ -6,8 +6,8 @@
             <a href="{% url 'delete-job' job.id %}">Delete</a>
             {% endif %}
 
-            <a href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
-            <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
+            <a class ="btn btn-primary " type ="button" href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
+            <h5>{{job.id}} -- <a class ="btn btn-secondary " type ="button" href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
             <small>{{job.field.name}}</small>
             <hr>
         </div>
