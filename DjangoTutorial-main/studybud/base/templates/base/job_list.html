@@ -36,7 +36,6 @@
 </style>
 
 <div>
-
     {% for job in jobs %}
     <div class="job-container">
         {% if request.user == job.host %}
@@ -54,10 +53,12 @@
         </div>
     </div>
     {% endfor %}
+    
 
     <script>
     // Variables
     const jobContainers = document.querySelectorAll('.job-container'); 
+    var csrftoken = '{{ csrf_token }}';
     let currentJobIndex = 0; 
 
     // Show the first job
