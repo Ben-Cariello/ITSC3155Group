@@ -1,16 +1,19 @@
 <h3>New Listings!</h3>
-        <hr>
-        {% for message in job_messages %}
-        <div>
-            <small><a class ="btn btn-info btn-sm" type ="button" href="{% url 'user-profile' message.user.id %}">Company: {{message.user}}</a><br>Posted: {{message.created|timesince}} ago</small>
-            <!--<small>replied to "{{message.job}}" </small>-->
+<hr>
+{% for message in job_messages %}
+<div>
+    <small>
+        <a class="btn btn-info btn-sm" href="{% url 'user-profile' message.user.id %}">
+            Company: {{ message.user }}
+        </a><br>
+        Posted: {{ message.created|timesince }} ago
+    </small>
+    <p>{{ message }}</p>
 
-            <p>{{message}}</p>
-            {% if request.user == message.user %}
-                <a class ="btn btn-info " type ="button" href="{% url 'delete-message' message.id %}">Delete</a>
-
-                {% endif %}
-                <hr>
-        </div>
-
-        {% endfor %}
+    {% if request.user == message.user %}
+        <a class="btn btn-delete btn-sm" type="button" href="{% url 'delete-message' message.id %}">Delete</a>
+    {% endif %}
+    
+    <hr>
+</div>
+{% endfor %}
