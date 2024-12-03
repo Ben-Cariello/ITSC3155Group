@@ -2,21 +2,28 @@
 
 <style>
 .swipeButton {
-    width: 200px;
-    height: 150px;
+    width: 130px;
+    height: 140px;
+    font-size: 100px;
+
 }
 
 #leftButton {
     margin-right: 250px;
+    color: red;
+}
+#leftButton:hover{
+    background-color: red;
+    color: black;
 }
 
 #rightButton {
     margin-left: 250px;
+    color: green;
 }
-
-img {
-    width: 200px;
-    height: 150px;
+#rightButton:hover{
+    background-color: green;
+    color: black;
 }
 
 .job-container {
@@ -41,8 +48,8 @@ img {
         <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
         <small>{{job.field.name}}</small>
         <hr>
-        <button class="swipeButton" id="leftButton"><img src="{% static 'images/redX.jpg' %}"></button>
-        <button class="swipeButton" id="rightButton"><img src="{% static 'images/greenCheck.jpg' %}"></button>
+        <button class="swipeButton" id="leftButton">X</button>
+        <button class="swipeButton" id="rightButton">✓</button>
     </div>
     {% endfor %}
 
