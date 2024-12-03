@@ -1,34 +1,36 @@
 {% extends 'main.html' %}
 
-{% load static %}
-
 {% block content %}
-
 <style>
-    .home-container{
-        display: grid;
-        grid-template-columns: 3fr 1fr;
+    .jobFeed{
+        border: 1px solid black;
     }
 </style>
-
 
 <div class="home-container">
 
     <div>
-        <h5>{{job_count}} jobs found!</h5>
-        <a href="{% url 'create-Job' %}"></a>
-
-        {% include 'base/job_list.html' %}
-       
+       {% include 'base/field_component.html' %}
     </div>
 
-        <div>
-            {% include 'base/activity_component.html' %}
+    <div>
+        <h5>{{job_count}} jobs found!</h5>
+        <a href="{% url 'create-room' %}"></a>
+            
+        <div class="jobFeed">
+            <div>
+                {% include 'base/feed_component.html' %}
+            </div>
+            
         </div>
+
+        </section>
+    </div>
 
     </div>
 
     
 </div>
+
 
 {% endblock content %}

@@ -1,0 +1,79 @@
+{% load static %}
+
+<style>
+.swipeButton {
+    width: 200px;
+    height: 150px;
+}
+
+#leftButton {
+    margin-right: 250px;
+}
+
+#rightButton {
+    margin-left: 250px;
+}
+
+img {
+    width: 200px;
+    height: 150px;
+}
+
+.job-container {
+    display: none; 
+}
+
+.job-container.active {
+    display: block; 
+}
+</style>
+
+<div>
+
+    {% for job in jobs %}
+    <div class="job-container">
+        {% if request.user == job.host %}
+        <a href="{% url 'update-job' job.id %}">Edit</a>
+        <a href="{% url 'delete-job' job.id %}">Delete</a>
+        {% endif %}
+
+        <a href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
+        <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
+        <small>{{job.field.name}}</small>
+        <hr>
+        <button class="swipeButton" id="leftButton"><img src="{% static 'images/redX.jpg' %}"></button>
+        <button class="swipeButton" id="rightButton"><img src="{% static 'images/greenCheck.jpg' %}"></button>
+    </div>
+    {% endfor %}
+
+    <script>
+    // Variables
+    const jobContainers = document.querySelectorAll('.job-container'); 
+    let currentJobIndex = 0; 
+
+    // Show the first job
+    jobContainers[currentJobIndex].classList.add('active');
+
+    // Declaring Buttons
+    const denyBut = document.querySelector('#leftButton');
+    const acceptBut = document.querySelector('#rightButton');
+    
+    // Initializing Buttons
+    denyBut.onclick = denyApp;
+    acceptBut.onclick = acceptApp;
+
+    // Deny application
+    function denyApp() {
+        jobContainers[currentJobIndex].classList.remove('active');
+        currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
+        jobContainers[currentJobIndex].classList.add('active');
+    }
+
+    // Accept application 
+    function acceptApp() {
+        jobContainers[currentJobIndex].classList.remove('active');
+        currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
+        jobContainers[currentJobIndex].classList.add('active');
+    }
+    </script>
+</div>
