@@ -2,9 +2,9 @@
 
 <style>
 .swipeButton {
-    width: 130px;
-    height: 140px;
-    font-size: 100px;
+    width: 150px;
+    height: 150px;
+    font-size: 75px;
 
 }
 
@@ -48,8 +48,10 @@
         <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
         <small>{{job.field.name}}</small>
         <hr>
+        <div>
         <button class="swipeButton" id="leftButton">X</button>
         <button class="swipeButton" id="rightButton">✓</button>
+        </div>
     </div>
     {% endfor %}
 
