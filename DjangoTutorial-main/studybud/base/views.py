@@ -9,26 +9,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm, ProfilePictureForm
 from .models import Job, Field, Message, UserProfile
 
-
-# Create your views here.
-
-
-#rooms = [
- #   {'id':1, 'name':'Lets learn python!'},
- #   {'id':2, 'name':'Design with me'},
-  #  {'id':3, 'name':'Frontend developers'},
-#]
-
-
-
 def loginPage(request):
     page = 'login'
 
     if request.user.is_authenticated:
         return redirect('home')
-
-
-
 
     if request.method == 'POST':
         username = request.POST.get('username').lower()
@@ -58,21 +43,21 @@ def logoutUser(request):
     
 def registerPage(request):
     form = CustomUserCreationForm()
-
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
+
+            user_profile = UserProfile.objects.create(user=user, user_type=form.cleaned_data['user_type'])
+
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'An error has occured during registration')
+            messages.error(request, 'An error has occurred during registration')
 
-    return render(request, 'base/login_register.html', {'form':form})
-
-
+    return render(request, 'base/login_register.html', {'form': form})
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
