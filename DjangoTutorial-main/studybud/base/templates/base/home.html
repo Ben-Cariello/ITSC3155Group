@@ -1,5 +1,7 @@
 {% extends 'main.html' %}
 
+{% load static %}
+
 {% block content %}
 
 <style>
@@ -13,11 +15,19 @@
 <div class="home-container">
 
     <div>
+        {% if request.user.is_authenticated %}
         <h5>{{job_count}} jobs found!</h5>
         <a href="{% url 'create-Job' %}"></a>
 
         {% include 'base/job_list.html' %}
-       
+        {% else %}
+        <div class="applyNow">
+            <h1>Sign up Now!</h1>
+            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'register' %}">Register</a>
+            <p> or already a member?</p>
+            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'login' %}">Login</a>
+        </div>
+        {% endif %}
     </div>
 
         <div>
