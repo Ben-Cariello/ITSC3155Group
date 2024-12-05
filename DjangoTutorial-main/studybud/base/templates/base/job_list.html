@@ -1,0 +1,92 @@
+{% load static %}
+
+<style>
+.swipeButton {
+    width: 150px;
+    height: 150px;
+    font-size: 75px;
+
+}
+
+#leftButton {
+    margin-right: 250px;
+    color: red;
+}
+#leftButton:hover{
+    background-color: red;
+    color: black;
+}
+
+#rightButton {
+    margin-left: 250px;
+    color: green;
+}
+#rightButton:hover{
+    background-color: green;
+    color: black;
+}
+
+.job-container {
+  display: flex;
+}
+.job-container > div {
+  width:20% 60% 20%;
+}
+</style>
+
+
+
+<div class="job-container">
+    <div>
+        <button class="swipeButton" id="leftButton">X</button>
+    </div>
+    {% for job in jobs %}
+    <div >
+        {% if request.user == job.host %}
+        <a href="{% url 'update-job' job.id %}">Edit</a>
+        <a href="{% url 'delete-job' job.id %}">Delete</a>
+        {% endif %}
+
+        <a href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
+        <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
+        <small>{{job.field.name}}</small>
+        <hr>
+        
+    </div>
+    {% endfor %}
+    <div>
+        <button class="swipeButton" id="rightButton">✓</button>
+    </div>
+</div>
+<script>
+    // Variables
+    const jobContainers = document.querySelectorAll('.job-container'); 
+    var csrftoken = '{{ csrf_token }}';
+    let currentJobIndex = 0; 
+
+    // Show the first job
+    jobContainers[currentJobIndex].classList.add('active');
+
+    // Declaring Buttons
+    const denyBut = document.querySelector('#leftButton');
+    const acceptBut = document.querySelector('#rightButton');
+    
+    // Initializing Buttons
+    denyBut.onclick = denyApp;
+    acceptBut.onclick = acceptApp;
+
+    // Deny application
+    function denyApp() {
+        jobContainers[currentJobIndex].classList.remove('active');
+        currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
+        jobContainers[currentJobIndex].classList.add('active');
+    }
+
+    // Accept application 
+    function acceptApp() {
+        jobContainers[currentJobIndex].classList.remove('active');
+        currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
+        jobContainers[currentJobIndex].classList.add('active');
+    }
+</script>
+
