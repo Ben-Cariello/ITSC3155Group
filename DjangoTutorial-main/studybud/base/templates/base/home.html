@@ -19,11 +19,13 @@
 <div class="home-container">
 
     <div>
-        {% if request.user.is_authenticated %}
-        <h5>{{job_count}} jobs found!</h5>
-        <a href="{% url 'create-Job' %}"></a>
-
+        {% if user.is_authenticated %}
+        {% if user.userprofile.user_type == 'business' %}
+    <a href="{% url 'create-Job' %}" class="btn btn-primary">Create Job Posting</a>
+        {% endif %}
+        {% if user.userprofile.user_type == 'employee' %}
         {% include 'base/job_list.html' %}
+        {% endif %}
         {% else %}
         <div class="applyNow">
             <h1>Sign up Now!</h1>
