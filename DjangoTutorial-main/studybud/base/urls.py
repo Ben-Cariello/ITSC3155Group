@@ -18,6 +18,7 @@ urlpatterns = [
     path('delete-message/<str:pk>', views.deleteMessage, name="delete-message"),
     
     path('user/edit/<int:pk>/', views.editProfile, name='edit-profile'),  
+    path('apply-job/', views.apply_job, name='apply-job'),
 ]
 
 if settings.DEBUG:

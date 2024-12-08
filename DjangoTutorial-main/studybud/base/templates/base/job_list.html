@@ -44,17 +44,39 @@ jobItems[currentJobIndex].classList.add('active');
 function denyApp() {
     jobItems[currentJobIndex].classList.remove('active');
     jobItems[currentJobIndex].remove();  
-    
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
     jobItems[currentJobIndex].classList.add('active');
 }
     
 
 function acceptApp() {
-    jobItems[currentJobIndex].classList.remove('active');
-    jobItems[currentJobIndex].remove();  
+    const jobItem = jobItems[currentJobIndex];
+    const jobId = jobItem.querySelector('h5 a').getAttribute('href').split('/').pop();  // Get the job id from the URL
+
+    // Send an AJAX request to save the job_id in the user's job_applied field
+    fetch("{% url 'apply-job' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")  // Ensure CSRF token is included
+        },
+        body: JSON.stringify({ job_id: jobId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Job applied successfully');
+        } else {
+            console.log('Error applying for job:', data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+
+    // Remove current job from DOM
+    jobItem.classList.remove('active');
+    jobItem.remove();  
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
-    jobItems[currentJobIndex].classList.add('active');    
+    jobItems[currentJobIndex].classList.add('active');   
 }
 
 </script>

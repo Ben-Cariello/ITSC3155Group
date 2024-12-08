@@ -8,7 +8,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm, ProfilePictureForm
 from .models import Job, Field, Message, UserProfile
-
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Job, UserProfile
 
 # Create your views here.
 
@@ -50,6 +52,30 @@ def loginPage(request):
 
     context = {'page' : page}
     return render(request, 'base/login_register.html', context)
+
+
+@login_required
+def apply_job(request):
+    if request.method == 'POST':
+        job_id = request.POST.get('job_id')
+        job = get_object_or_404(Job, id=job_id)
+        user_profile = request.user.userprofile
+
+        # Add job to the user's applied jobs list (stored as a comma-separated string)
+        if user_profile.jobs_applied:
+            jobs_applied = user_profile.jobs_applied.split(',')
+        else:
+            jobs_applied = []
+
+        if str(job.id) not in jobs_applied:
+            jobs_applied.append(str(job.id))
+
+        # Update the jobs_applied field
+        user_profile.jobs_applied = ','.join(jobs_applied)
+        user_profile.save()
+
+        return JsonResponse({'success': True, 'message': 'Job applied successfully.'})
+    return JsonResponse({'success': False, 'message': 'Invalid request.'})
 
 
 def logoutUser(request):
