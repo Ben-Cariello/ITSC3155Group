@@ -6,9 +6,13 @@
         <button class="swipeButton" id="leftButton">X</button>
     </div>
 
+<<<<<<< HEAD
 
     
 
+=======
+    <!-- Loop through all jobs -->
+>>>>>>> ea7eb1416d896cc87daabdcae8b6f37b4458c4f9
     {% for job in jobs %}
     <div class="job-item">
         {% if request.user == job.host %}
@@ -23,7 +27,10 @@
     </div>
     {% endfor %}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ea7eb1416d896cc87daabdcae8b6f37b4458c4f9
     <div>
         <button class="swipeButton" id="rightButton">✓</button>
     </div>
@@ -54,6 +61,7 @@ function denyApp() {
     
 
 function acceptApp() {
+<<<<<<< HEAD
     const currentJob = jobItems[currentJobIndex];
     const jobId = currentJob.querySelector('h5 a').getAttribute('href').split('/').pop();  // Extract job ID from URL
 
@@ -90,3 +98,12 @@ function acceptApp() {
 }
 
 </script>
+=======
+    jobItems[currentJobIndex].classList.remove('active');
+    jobItems[currentJobIndex].remove();  
+    currentJobIndex = (currentJobIndex + 1) % jobItems.length;
+    jobItems[currentJobIndex].classList.add('active');    
+}
+
+</script>
+>>>>>>> ea7eb1416d896cc87daabdcae8b6f37b4458c4f9

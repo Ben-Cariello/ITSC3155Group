@@ -1,35 +1,30 @@
 {% extends 'main.html' %}
+{% load static %}
 
 {% block content %}
-
 
 <style>
 
     .profile-container{
-
         display: grid;
         grid-template-columns: 1fr 2fr 1fr;
     }
 
-
 </style>
 
+<h1>{{ user.username }}'s Profile</h1>
 
-<h1>{{user.username}}</h1>
+{% if request.user == user %}
+    <a href="{% url 'edit-profile' user.id %}">Edit Profile</a>
+{% endif %}
 
-<div class="profile-container">
-    <div>
-        {% include 'base/field_component.html' %}
-    </div>
+<div>
+    {% if user.userprofile and user.userprofile.profile_picture %}
+    <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture">
+    {% else %}
+        <img src="{% static 'default.jpg' %}" alt="Default Profile Picture">
+    {% endif %}
 
-    <div>
-        {% include 'base/feed_component.html' %}
-    </div>
-        
-    <div>
-
-        {% include 'base/activity_component.html' %}
-    </div>
 </div>
 
 <p>Email: {{ user.email }}</p>
@@ -74,14 +69,24 @@
     {% endif %}
 
 <h3>Sent Applications:</h3>
+<<<<<<< HEAD
     {% if job_applied %}
         <ul>
             {% for message in job_applied %}
+=======
+    {% if job_messages %}
+        <ul>
+            {% for message in job_messages %}
+>>>>>>> ea7eb1416d896cc87daabdcae8b6f37b4458c4f9
                 <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
             {% endfor %}
         </ul>
     {% else %}
+<<<<<<< HEAD
         <p>No Sent Applications</p>
+=======
+        <p>No messages.</p>
+>>>>>>> ea7eb1416d896cc87daabdcae8b6f37b4458c4f9
     {% endif %}
 
     <script>

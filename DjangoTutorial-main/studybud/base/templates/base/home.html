@@ -1,36 +1,42 @@
 {% extends 'main.html' %}
 
+{% load static %}
+
 {% block content %}
+
 <style>
-    .jobFeed{
-        border: 1px solid black;
+    .home-container{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
     }
 </style>
+
 
 <div class="home-container">
 
     <div>
-       {% include 'base/field_component.html' %}
-    </div>
-
-    <div>
+        {% if request.user.is_authenticated %}
         <h5>{{job_count}} jobs found!</h5>
-        <a href="{% url 'create-room' %}"></a>
-            
-        <div class="jobFeed">
-            <div>
-                {% include 'base/feed_component.html' %}
-            </div>
-            
-        </div>
+        <a href="{% url 'create-Job' %}"></a>
 
-        </section>
+        {% include 'base/job_list.html' %}
+        {% else %}
+        <div class="applyNow">
+            <h1>Sign up Now!</h1>
+            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'register' %}">Register</a>
+            <p> or already a member?</p>
+            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'login' %}">Login</a>
+        </div>
+        {% endif %}
     </div>
+
+        <div>
+            {% include 'base/activity_component.html' %}
+        </div>
 
     </div>
 
     
 </div>
-
 
 {% endblock content %}

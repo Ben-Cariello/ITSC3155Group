@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('login/', views.loginPage, name="login"),
@@ -15,5 +18,12 @@ urlpatterns = [
     path('delete-message/<str:pk>', views.deleteMessage, name="delete-message"),
     
     path('user/edit/<int:pk>/', views.editProfile, name='edit-profile'),  
+<<<<<<< HEAD
     path('add-job-applied/', views.add_job_applied, name='add-job-applied'),
 ]
+=======
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> ea7eb1416d896cc87daabdcae8b6f37b4458c4f9
