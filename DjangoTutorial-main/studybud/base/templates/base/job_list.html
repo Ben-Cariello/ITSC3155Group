@@ -18,7 +18,7 @@
 }
 
 #rightButton {
-    margin-left: 700px;
+    margin-left: 250px;
     color: green;
 }
 #rightButton:hover{
@@ -27,36 +27,38 @@
 }
 
 .job-container {
-    display: none; 
+  display: flex;
 }
-
-.job-container.active {
-    display: block; 
+.job-container > div {
+  width:20% 60% 20%;
 }
 </style>
 
-<div>
-    {% for job in jobs %}
-    <div class="job-container">
 
-        <div>
-            {% if request.user == job.host %}
-            <a href="{% url 'update-room' job.id %}">Edit</a>
-            <a href="{% url 'delete-room' job.id %}">Delete</a>
-            {% endif %}
 
-            <a href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
-            <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
-            <small>{{job.field.name}}</small>
-            <hr>
+<div class="job-container">
+    <div>
         <button class="swipeButton" id="leftButton">X</button>
-        <button class="swipeButton" id="rightButton">✓</button>
-        </div>
+    </div>
+    {% for job in jobs %}
+    <div >
+        {% if request.user == job.host %}
+        <a href="{% url 'update-job' job.id %}">Edit</a>
+        <a href="{% url 'delete-job' job.id %}">Delete</a>
+        {% endif %}
+
+        <a href="{% url 'user-profile' job.host.id %}">Company: {{job.host.username}}</a>
+        <h5>{{job.id}} -- <a href="{% url 'job' job.id %}">Position: {{job.name}}</a></h5>
+        <small>{{job.field.name}}</small>
+        <hr>
+        
     </div>
     {% endfor %}
-    
-
-    <script>
+    <div>
+        <button class="swipeButton" id="rightButton">✓</button>
+    </div>
+</div>
+<script>
     // Variables
     const jobContainers = document.querySelectorAll('.job-container'); 
     var csrftoken = '{{ csrf_token }}';
@@ -86,5 +88,5 @@
         currentJobIndex = (currentJobIndex + 1) % jobContainers.length;
         jobContainers[currentJobIndex].classList.add('active');
     }
-    </script>
-</div>
+</script>
+
