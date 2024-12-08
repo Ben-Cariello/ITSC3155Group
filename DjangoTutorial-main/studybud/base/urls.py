@@ -16,7 +16,7 @@ urlpatterns = [
     path('update-job/<str:pk>', views.updateJob, name="update-Job"),
     path('delete-job<str:pk>', views.deleteJob, name="delete-Job"),
     path('delete-message/<str:pk>', views.deleteMessage, name="delete-message"),
-    
+    path('apply-job/', views.applyJob, name='apply-job'),
     path('user/edit/<int:pk>/', views.editProfile, name='edit-profile'),  
 ]
 

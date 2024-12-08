@@ -14,11 +14,12 @@ class UserProfile(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    applied_jobs = models.ManyToManyField('Job', blank=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='employee')
     resume = models.FileField(upload_to='resumes/', null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', default='default.jpg', null=True, blank=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='employee')
-
+    
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
