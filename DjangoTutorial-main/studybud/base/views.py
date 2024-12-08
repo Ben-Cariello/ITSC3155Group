@@ -6,9 +6,17 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+<<<<<<< Updated upstream
 from .models import Job, Field, Message
 from .forms import JobForm
 from django.http import JsonResponse
+=======
+from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm, ProfilePictureForm
+from .models import Job, Field, Message, UserProfile
+import json
+from django.http import JsonResponse
+
+>>>>>>> Stashed changes
 
 # Create your views here.
 
@@ -30,9 +38,6 @@ def loginPage(request):
 
     if request.user.is_authenticated:
         return redirect('home')
-
-
-
 
     if request.method == 'POST':
         username = request.POST.get('username').lower()
@@ -76,7 +81,32 @@ def registerPage(request):
 
     return render(request, 'base/login_register.html', {'form':form})
 
+@login_required
+def add_job_applied(request):
+    if request.method == 'POST':
+        try:
+            # Get the job ID from the POST request
+            data = json.loads(request.body)
+            job_id = data.get('job_id')
 
+            # Get the logged-in user's profile
+            user_profile = UserProfile.objects.get(user=request.user)
+
+            # Add the job ID to the job_applied field (assumes it's a comma-separated string)
+            if user_profile.job_applied:
+                # Check if the job_id is already in the list to avoid duplicates
+                if job_id not in user_profile.job_applied.split(','):
+                    user_profile.job_applied += f',{job_id}'  # Append job ID
+            else:
+                user_profile.job_applied = str(job_id)  # If empty, just set the first job ID
+
+            user_profile.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -124,6 +154,45 @@ def userProfile(request, pk):
 
     context = {'user':user, 'jobs':jobs, 'job_messages':job_messages, 'fields':fields}
     return render(request, 'base/profile.html', context)
+
+
+
+@login_required
+def profile_update(request):
+    if request.method == 'POST':
+        profile_form = ProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('profile')  
+    else:
+        profile_form = ProfilePictureForm(instance=request.user.profile)
+    return render(request, 'profile.html', {'profile_form': profile_form})
+
+@login_required
+def editProfile(request, pk):
+    user = User.objects.get(id=pk)
+    user_profile = user.userprofile
+    
+    if request.method == 'POST':
+        user_form = CustomUserEditForm(request.POST, instance=user)
+        profile_form = ProfilePictureForm(request.POST, request.FILES, instance=user_profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+
+            user_form.save()
+            profile_form.save()
+            return redirect('user-profile', pk=user.id)
+    else:
+        user_form = CustomUserEditForm(instance=user)
+        profile_form = ProfilePictureForm(instance=user_profile)
+    
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user': user,
+    }
+
+    return render(request, 'base/edit_profile.html', context)
 
 
 

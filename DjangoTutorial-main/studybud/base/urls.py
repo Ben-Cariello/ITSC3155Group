@@ -8,10 +8,12 @@ urlpatterns = [
 
     path('', views.home, name="home"), 
     path('job/<str:pk>/', views.job, name="job"),
-    path('profile/<str:pk>/', views.userProfile, name="user-profile"),
-
-    path('create-room/', views.createRoom, name="create-room"),
-    path('update-room/<str:pk>', views.updateRoom, name="update-room"),
-    path('delete-room/<str:pk>', views.deleteRoom, name="delete-room"),
+    path('profile/<int:pk>/', views.userProfile, name="user-profile"),  
+    path('create-Job/', views.createJob, name="create-Job"),
+    path('update-job/<str:pk>', views.updateJob, name="update-Job"),
+    path('delete-job<str:pk>', views.deleteJob, name="delete-Job"),
     path('delete-message/<str:pk>', views.deleteMessage, name="delete-message"),
+    
+    path('user/edit/<int:pk>/', views.editProfile, name='edit-profile'),  
+    path('add-job-applied/', views.add_job_applied, name='add-job-applied'),
 ]

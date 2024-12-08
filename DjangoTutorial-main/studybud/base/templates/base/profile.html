@@ -32,5 +32,60 @@
     </div>
 </div>
 
+<p>Email: {{ user.email }}</p>
+<p>First Name: {{ user.first_name }}</p>
+<p>Last Name: {{ user.last_name }}</p>
+
+<h3>Resume:</h3>
+
+    {% if profile.resume %}
+
+        <p>Resume: <a href="{{ profile.resume.url }}" target="_blank">Download Resume</a></p>
+
+    {% else %}
+
+        <p>No resume uploaded yet.</p>
+
+    {% endif %}
+
+    {% if request.user == user %}
+
+        <h3>Upload or Edit Resume:</h3>
+
+        <div class="job-form">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ resume_form.as_p }}
+                <button type="submit">Upload Resume</button>
+            </form>
+        </div>
+
+    {% endif %}
+
+<h3>Jobs Posted:</h3>
+    {% if jobs %}
+        <ul>
+            {% for job in jobs %}
+                <li><a href="{% url 'job' job.id %}">{{ job.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No jobs posted yet.</p>
+    {% endif %}
+
+<h3>Sent Applications:</h3>
+    {% if job_applied %}
+        <ul>
+            {% for message in job_applied %}
+                <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No Sent Applications</p>
+    {% endif %}
+
+    <script>
+        document.querySelector('input[type="file"]').setAttribute('accept', '.pdf');
+    </script>
 
 {% endblock content %}
