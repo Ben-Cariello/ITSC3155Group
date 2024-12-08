@@ -4,9 +4,6 @@ from django.db.models.deletion import CASCADE
 from django.db.models.signals import post_save
 
 
-
-
-
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('EMPLOYEE', 'Employee'),
@@ -21,6 +18,8 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+    
+
 
 class Field(models.Model):
    name = models.CharField(max_length=200)

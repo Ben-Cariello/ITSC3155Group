@@ -6,8 +6,12 @@
 
 <style>
     .home-container{
-        display: grid;
-        grid-template-columns: 3fr 1fr;
+        display: flex;
+        justify-content: center; 
+        align-items: center;   
+        height: 50vh;         
+        flex-direction: column; 
+        text-align: center;
     }
 </style>
 
@@ -28,13 +32,6 @@
             <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'login' %}">Login</a>
         </div>
         {% endif %}
-    </div>
-
-        <div>
-            {% include 'base/activity_component.html' %}
-        </div>
-
-    </div>
 
     
 </div>
