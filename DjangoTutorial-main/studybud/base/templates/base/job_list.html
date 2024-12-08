@@ -1,14 +1,14 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/jobFeed.css' %}">
-<div class="job-container" id = "job-container">
+<div class="job-container" id="job-container">
     <div>
         <button class="swipeButton" id="leftButton">X</button>
     </div>
 
     <!-- Loop through all jobs -->
     {% for job in jobs %}
-    <div class="job-item">
+    <div class="job-item" data-job-id="{{ job.id }}">
         {% if request.user == job.host %}
         <a href="{% url 'update-Job' job.id %}">Edit</a>
         <a href="{% url 'delete-Job' job.id %}">Delete</a>
@@ -17,11 +17,12 @@
         <a href="{% url 'user-profile' job.host.id %}">Company: {{ job.host.username }}</a>
         <h5>{{ job.id }} -- <a href="{% url 'job' job.id %}">Position: {{ job.name }}</a></h5>
         <small>{{ job.field.name }}</small>
+
         {% if job.host.userprofile and job.host.userprofile.profile_picture %}
-    <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
-    {% else %}
+        <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
+        {% else %}
         <img src="{% static 'default.jpg' %}" alt="Company Logo">
-    {% endif %}
+        {% endif %}
         <hr>
     </div>
     {% endfor %}
@@ -31,35 +32,48 @@
     </div>
 </div>
 
-
 <script>
 // Variables
 const jobItems = document.querySelectorAll('.job-item');
 const denyBut = document.querySelector('#leftButton');
 const acceptBut = document.querySelector('#rightButton');
-const test = document.getElementById('Test');
 let currentJobIndex = jobItems.length - 1;
 
-// Initializing Buttons
+// Initialize Buttons
 denyBut.onclick = denyApp;
 acceptBut.onclick = acceptApp;
 
 jobItems[currentJobIndex].classList.add('active');
 
+// Deny Function
 function denyApp() {
     jobItems[currentJobIndex].classList.remove('active');
     jobItems[currentJobIndex].remove();  
-    
+
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
     jobItems[currentJobIndex].classList.add('active');
 }
-    
 
+// Accept Function
 function acceptApp() {
-    jobItems[currentJobIndex].classList.remove('active');
-    jobItems[currentJobIndex].remove();  
-    currentJobIndex = (currentJobIndex + 1) % jobItems.length;
-    jobItems[currentJobIndex].classList.add('active');    
-}
+    const jobId = jobItems[currentJobIndex].dataset.jobId;
 
+    fetch(`/apply-job/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ job_id: jobId })
+    }).then(response => {
+        if (response.ok) {
+            jobItems[currentJobIndex].classList.remove('active');
+            jobItems[currentJobIndex].remove();
+            currentJobIndex = (currentJobIndex + 1) % jobItems.length;
+            jobItems[currentJobIndex].classList.add('active');
+        } else {
+            alert('Error applying to job');
+        }
+    });
+}
 </script>
