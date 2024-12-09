@@ -71,7 +71,6 @@
 {% endif %}
 
 {% if user.is_authenticated and user.userprofile.user_type == 'employee' %}
-
 <h3>Applied Jobs:</h3>
     {% if user.userprofile.applied_jobs.exists %}
         <ul>
@@ -83,9 +82,7 @@
             {% endfor %}
         </ul>
     {% else %}
-
         <p>No applications submitted yet.</p>
     {% endif %}
-    
 {% endif %}
 {% endblock content %}

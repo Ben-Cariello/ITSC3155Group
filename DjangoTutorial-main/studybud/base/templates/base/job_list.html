@@ -1,7 +1,7 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/jobFeed.css' %}">
-<div class="job-container" id = "job-container">
+<div class="job-container" id="job-container">
     <div>
         <button class="swipeButton" id="leftButton">X</button>
     </div>
@@ -17,6 +17,7 @@
         <a href="{% url 'user-profile' job.host.id %}">Company: {{ job.host.username }}</a>
         <h5>{{ job.id }} -- <a href="{% url 'job' job.id %}">Position: {{ job.name }}</a></h5>
         <small>{{ job.field.name }}</small>
+
         {% if job.host.userprofile and job.host.userprofile.profile_picture %}
         <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
         {% else %}
@@ -31,7 +32,6 @@
     </div>
 </div>
 
-
 <script>
 // Variables
 const jobItems = document.querySelectorAll('.job-item');
@@ -39,23 +39,23 @@ const denyBut = document.querySelector('#leftButton');
 const acceptBut = document.querySelector('#rightButton');
 let currentJobIndex = jobItems.length - 1;
 
-// Initializing Buttons
+// Initialize Buttons
 denyBut.onclick = denyApp;
 acceptBut.onclick = acceptApp;
 
 jobItems[currentJobIndex].classList.add('active');
 
+// Deny Function
 function denyApp() {
     jobItems[currentJobIndex].classList.remove('active');
     jobItems[currentJobIndex].remove();  
-    
+
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
     jobItems[currentJobIndex].classList.add('active');
 }
-    
 
+// Accept Function
 function acceptApp() {
-    
     const jobId = jobItems[currentJobIndex].dataset.jobId;
 
     fetch(`/apply-job/`, {
@@ -76,5 +76,4 @@ function acceptApp() {
         }
     });
 }
-
 </script>
