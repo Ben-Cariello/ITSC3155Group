@@ -8,6 +8,7 @@
 
     <!-- Loop through all jobs -->
     {% for job in jobs %}
+    {% if job not in request.user.userprofile.applied_jobs.all %}
     <div class="job-item" data-job-id="{{ job.id }}">
         {% if request.user == job.host %}
         <a href="{% url 'update-Job' job.id %}">Edit</a>
@@ -25,6 +26,7 @@
         {% endif %}
         <hr>
     </div>
+    {% endif %}
     {% endfor %}
 
     <div>
