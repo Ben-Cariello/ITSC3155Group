@@ -1,44 +1,64 @@
 {% extends 'main.html' %}
-
 {% load static %}
 
 {% block content %}
 
 <style>
-    .home-container{
+    .applyNow {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center;     /* Center vertically */
+        flex-direction: column;  /* Stack the items vertically */
+        height: 50vh;            /* Take full viewport height */
+        text-align: center;
+        padding: 20px;
+    }
+
+    .home-container {
         display: grid;
         grid-template-columns: 3fr 1fr;
+        gap: 20px;
+    }
+
+    .left-section {
+        padding: 20px;
+    }
+
+    .right-section {
+        padding: 20px;
     }
 </style>
 
+{% if not user.is_authenticated %}
 
-<div class="home-container">
-
-    <div>
-        {% if user.is_authenticated %}
-        {% if user.userprofile.user_type == 'business' %}
-    <a href="{% url 'create-Job' %}" class="btn btn-primary">Create Job Posting</a>
-        {% endif %}
-        {% if user.userprofile.user_type == 'employee' %}
-        {% include 'base/job_list.html' %}
-        {% endif %}
-        {% else %}
-        <div class="applyNow">
-            <h1>Sign up Now!</h1>
-            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'register' %}">Register</a>
-            <p> or already a member?</p>
-            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'login' %}">Login</a>
-        </div>
-        {% endif %}
+    <div class="applyNow">
+        <h1>Sign up Now!</h1>
+        <a class="btn btn-login navbar-btn" href="{% url 'register' %}">Register</a>
+        <p>or already a member?</p>
+        <a class="btn btn-login navbar-btn" href="{% url 'login' %}">Login</a>
     </div>
 
-        <div>
+{% else %}
+
+    <div class="home-container">
+
+        <div class="left-section">
+
+            {% if user.userprofile.user_type == 'business' %}
+                <a href="{% url 'create-Job' %}" class="btn btn-primary">Create Job Posting</a>
+            {% endif %}
+            {% if user.userprofile.user_type == 'employee' %}
+                {% include 'base/job_list.html' %}
+            {% endif %}
+            
+        </div>
+
+        <div class="right-section">
             {% include 'base/activity_component.html' %}
         </div>
 
     </div>
 
-    
-</div>
+{% endif %}
 
 {% endblock content %}
