@@ -69,20 +69,23 @@
         <p>No jobs posted yet.</p>
     {% endif %}
 {% endif %}
+
 {% if user.is_authenticated and user.userprofile.user_type == 'employee' %}
-<h3>Sent Applications:</h3>
-    {% if job_messages %}
+
+<h3>Applied Jobs:</h3>
+    {% if user.userprofile.applied_jobs.exists %}
         <ul>
-            {% for message in job_messages %}
-                <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
+            {% for job in user.userprofile.applied_jobs.all %}
+                <li>
+                    <a href="{% url 'job' job.id %}">{{ job.name }}</a>
+                    (Applied {{ job.date_applied|timesince }} ago)
+                </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No messages.</p>
-    {% endif %}
 
-    <script>
-        document.querySelector('input[type="file"]').setAttribute('accept', '.pdf');
-    </script>
+        <p>No applications submitted yet.</p>
+    {% endif %}
+    
 {% endif %}
 {% endblock content %}

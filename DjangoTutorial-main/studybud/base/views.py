@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, JobForm, ResumeForm, CustomUserEditForm, ProfilePictureForm
 from .models import Job, Field, Message, UserProfile
+from django.http import JsonResponse
 
 def loginPage(request):
     page = 'login'
@@ -222,3 +223,18 @@ def deleteMessage(request, pk):
         return redirect('home')
 
     return render(request, 'base/delete.html', {'obj':message})
+
+def applyJob(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        import json
+        data = json.loads(request.body)
+        job_id = data.get("job_id")
+        
+        try:
+            job = Job.objects.get(id=job_id)
+            user_profile = request.user.userprofile
+            user_profile.applied_jobs.add(job)
+            return JsonResponse({"success": True})
+        except Job.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Job not found."})
+    return JsonResponse({"success": False, "error": "Invalid request."})
