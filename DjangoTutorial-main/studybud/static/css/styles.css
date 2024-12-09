@@ -1,13 +1,7 @@
-body {
-    background-color: #f5f5f5;  
-    color: #333333;  
-}
-
 
 .navbar {
     background-color: #333333; 
 }
-
 
 .navbar a {
     color: #b99f9f;  
@@ -121,3 +115,13 @@ footer {
     background-color: #0056b3;
 }
 
+body {
+    background-color: #BEBBBB;
+    color: #04030F;
+}
+#title{
+    color: #AF1B3F;
+}
+h1{
+    color: #04030F;
+}

@@ -1,5 +1,7 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <a href="/">
-    <h1>JobSwipe</h1>
+    <h1 id="title">JobSwipe</h1>
 </a>
 
 <form method="GET" action="{% url 'home' %}">
