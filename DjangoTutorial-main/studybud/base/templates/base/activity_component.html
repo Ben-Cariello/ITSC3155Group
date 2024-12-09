@@ -12,7 +12,7 @@
     <p><strong>Description:</strong> {{ job.description|truncatewords:20 }}</p> <!-- Truncate the description if needed -->
 
     {% if request.user == job.host %}
-        <a class="btn btn-delete btn-sm" type="button" href="{% url 'delete-job' job.id %}">Delete</a>
+        <a class="btn btn-delete btn-sm" type="button" href="{% url 'delete-Job' job.id %}">Delete</a>
     {% endif %}
 
     <hr>
