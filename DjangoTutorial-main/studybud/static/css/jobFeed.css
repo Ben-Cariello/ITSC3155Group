@@ -36,3 +36,11 @@
 .job-item.active {
   display: block;
 }
+
+#emptyContainer{
+  display: none;
+}
+
+.job-container > div {
+width:20% 60% 20%;
+}

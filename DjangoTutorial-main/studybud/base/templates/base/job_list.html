@@ -34,31 +34,54 @@
     </div>
 </div>
 
+<div id="emptyContainer">
+    <h2>Looks like you are all caught up!</h2>
+    <p>There are currently no other listings right now.</p>
+    <p>Check back later!</p>
+</div>
+
 <script>
 // Variables
-const jobItems = document.querySelectorAll('.job-item');
+const jobContainer = document.getElementById('job-container');
 const denyBut = document.querySelector('#leftButton');
 const acceptBut = document.querySelector('#rightButton');
+let jobItems = document.querySelectorAll('.job-item');
 let currentJobIndex = jobItems.length - 1;
 
 // Initialize Buttons
 denyBut.onclick = denyApp;
 acceptBut.onclick = acceptApp;
 
-jobItems[currentJobIndex].classList.add('active');
+
+
+
+if (jobItems.length === 0) {
+    jobContainer.style.display = 'none'; 
+    emptyContainer.style.display = 'block'; 
+} else {
+    jobItems[currentJobIndex].classList.add('active');
+}
 
 // Deny Function
 function denyApp() {
+    if (currentJobIndex == 0) {
+        isEmpty();
+    }
     jobItems[currentJobIndex].classList.remove('active');
     jobItems[currentJobIndex].remove();  
-
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
     jobItems[currentJobIndex].classList.add('active');
+    updateJobItems()
+    isEmpty();
 }
 
 // Accept Function
 function acceptApp() {
     const jobId = jobItems[currentJobIndex].dataset.jobId;
+
+    if (currentJobIndex == 0) {
+        isEmpty();
+    }
 
     fetch(`/apply-job/`, {
         method: 'POST',
@@ -77,5 +100,22 @@ function acceptApp() {
             alert('Error applying to job');
         }
     });
+    updateJobItems()
+    isEmpty();
+}
+
+function updateJobItems() {
+    jobItems = document.querySelectorAll('.job-item');
+    console.log("Updated");
+}
+
+function isEmpty() { 
+    if (jobItems.length == 1) {
+        jobContainer.style.display = 'none';
+        emptyContainer.style.display = 'block';
+        console.log("Empty")
+    }
+    console.log("False");
+    console.log(jobItems);
 }
 </script>
