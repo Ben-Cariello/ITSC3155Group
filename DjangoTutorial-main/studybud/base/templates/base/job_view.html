@@ -6,14 +6,14 @@
 <style>
     .room-container{
         display: grid;
-        grid-template-columns: 3fr 1fr;;
+        grid-template-columns:3fr;;
     }
 </style>
 
 <div class="room-container">
 
     <div>
-        <h1>{{job.name}}</h1>
+        <h1 style="text-align:center;">{{job.name}}</h1>
 
 
         <p>{{job.description}}</p>
@@ -40,19 +40,7 @@
 
     </div>  
 
-    <div>
-        <h3>Related Companies</h3>
-        <hr>
-
-       {% for user in participants %} 
-
-        <div>
-            <p>{{user.username}}</p>
-        </div>
-
-        {% endfor %} 
-    </div>
-
 </div>
+
 
 {% endblock %}

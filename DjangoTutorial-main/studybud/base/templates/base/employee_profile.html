@@ -30,7 +30,7 @@
 <p>Email: {{ user.email }}</p>
 <p>First Name: {{ user.first_name }}</p>
 <p>Last Name: {{ user.last_name }}</p>
-
+{% if user.is_authenticated and user.userprofile.user_type == 'employee' %}
 <h3>Resume:</h3>
 
     {% if profile.resume %}
@@ -56,7 +56,8 @@
         </div>
 
     {% endif %}
-
+{% endif %}
+{% if user.is_authenticated and user.userprofile.user_type == 'business' %}
 <h3>Jobs Posted:</h3>
     {% if jobs %}
         <ul>
@@ -67,20 +68,21 @@
     {% else %}
         <p>No jobs posted yet.</p>
     {% endif %}
+{% endif %}
 
-<h3>Messages:</h3>
-    {% if job_messages %}
+{% if user.is_authenticated and user.userprofile.user_type == 'employee' %}
+<h3>Applied Jobs:</h3>
+    {% if user.userprofile.applied_jobs.exists %}
         <ul>
-            {% for message in job_messages %}
-                <li>{{ message.body }} (Posted {{ message.created|timesince }} ago)</li>
+            {% for job in user.userprofile.applied_jobs.all %}
+                <li>
+                    <a href="{% url 'job' job.id %}">{{ job.name }}</a>
+                    (Applied {{ job.date_applied|timesince }} ago)
+                </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No messages.</p>
+        <p>No applications submitted yet.</p>
     {% endif %}
-
-    <script>
-        document.querySelector('input[type="file"]').setAttribute('accept', '.pdf');
-    </script>
-
+{% endif %}
 {% endblock content %}

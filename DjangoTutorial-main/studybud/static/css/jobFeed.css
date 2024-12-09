@@ -1,0 +1,38 @@
+.swipeButton {
+    width: 150px;
+    height: 150px;
+    font-size: 75px;
+}
+
+#leftButton {
+    margin-right: 250px;
+    color: red;
+}
+#leftButton:hover {
+    background-color: red;
+    color: black;
+}
+
+#rightButton {
+    margin-left: 250px;
+    color: green;
+}
+#rightButton:hover {
+    background-color: green;
+    color: black;
+}
+
+.job-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.job-item {
+  display: none;
+}
+
+.job-item.active {
+  display: block;
+}

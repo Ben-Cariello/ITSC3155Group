@@ -1,11 +1,17 @@
 {% extends 'main.html' %}
 
+{% load static %}
+
 {% block content %}
 
 <style>
     .home-container{
-        display: grid;
-        grid-template-columns: 3fr 1fr;
+        display: flex;
+        justify-content: center; 
+        align-items: center;   
+        height: 50vh;         
+        flex-direction: column; 
+        text-align: center;
     }
 </style>
 
@@ -13,18 +19,21 @@
 <div class="home-container">
 
     <div>
-        <h5>{{job_count}} jobs found!</h5>
-        <a href="{% url 'create-Job' %}"></a>
-
+        {% if user.is_authenticated %}
+        {% if user.userprofile.user_type == 'business' %}
+    <a href="{% url 'create-Job' %}" class="btn btn-primary">Create Job Posting</a>
+        {% endif %}
+        {% if user.userprofile.user_type == 'employee' %}
         {% include 'base/job_list.html' %}
-       
-    </div>
-
-        <div>
-            {% include 'base/activity_component.html' %}
+        {% endif %}
+        {% else %}
+        <div class="applyNow">
+            <h1>Sign up Now!</h1>
+            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'register' %}">Register</a>
+            <p> or already a member?</p>
+            <a class ="btn btn-login navbar-btn" type ="button" href="{% url 'login' %}">Login</a>
         </div>
-
-    </div>
+        {% endif %}
 
     
 </div>

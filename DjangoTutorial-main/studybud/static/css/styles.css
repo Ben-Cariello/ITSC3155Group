@@ -1,0 +1,122 @@
+body {
+    background-color: #f5f5f5;  /* Light grey */
+    color: #333333;  /* Dark grey text */
+}
+
+/* Change the header and navigation bar background to a darker grey */
+.navbar {
+    background-color: #333333;  /* Dark grey */
+}
+
+/* Change navbar links to lighter grey */
+.navbar a {
+    color: #b99f9f;  /* Light grey text */
+}
+
+.navbar a:hover {
+    color: #c9b8b8;  /* White text on hover */
+}
+
+/* Style the page headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #555555;  /* Medium grey */
+}
+
+/* Set card backgrounds to a softer grey */
+.card {
+    background-color: #e0e0e0;  
+    border-color: #cccccc; 
+}
+
+/* Change button colors */
+.btn-primary {
+    background-color: #757575;  
+    border-color: #616161;  
+}
+
+.btn-primary:hover {
+    background-color: #616161;  
+    border-color: #484848;  
+}
+
+/* Style form fields with grey background */
+input, textarea, select {
+    background-color: #f0f0f0;  
+    border: 1px solid #cccccc;  
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #888888; 
+}
+
+/* Set a grey footer */
+footer {
+    background-color: #333333;  
+    color: #dcdcdc;  
+}
+
+/* Button Styles */
+.navbar-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-profile {
+    background-color: #008CBA;
+    color: white;
+}
+
+.btn-profile:hover {
+    background-color: #007bb5;
+}
+
+.btn-logout {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-logout:hover {
+    background-color: #e53935;
+}
+
+.btn-login {
+    background-color: #008CBA;
+    color: white;
+}
+
+.btn-login:hover {
+    background-color: #007bb5;
+}
+
+.btn-delete {
+    background-color: #f44336; 
+    font-size: 12px;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-delete:hover {
+    background-color: #e53935; 
+}
+
+.create-job-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.create-job-button:hover {
+    background-color: #0056b3;
+}
