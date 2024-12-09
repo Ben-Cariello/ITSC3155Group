@@ -6,28 +6,35 @@
         <button class="swipeButton" id="leftButton">X</button>
     </div>
 
-    <!-- Loop through all jobs -->
-    {% for job in jobs %}
-    {% if job not in request.user.userprofile.applied_jobs.all %}
-    <div class="job-item" data-job-id="{{ job.id }}">
-        {% if request.user == job.host %}
-        <a href="{% url 'update-Job' job.id %}">Edit</a>
-        <a href="{% url 'delete-Job' job.id %}">Delete</a>
-        {% endif %}
-
-        <a href="{% url 'user-profile' job.host.id %}">Company: {{ job.host.username }}</a>
-        <h5>{{ job.id }} -- <a href="{% url 'job' job.id %}">Position: {{ job.name }}</a></h5>
-        <small>{{ job.field.name }}</small>
-
-        {% if job.host.userprofile and job.host.userprofile.profile_picture %}
-        <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
-        {% else %}
-        <img src="{% static 'default.jpg' %}" alt="Company Logo">
-        {% endif %}
-        <hr>
+    <!-- Check if there are any jobs to display -->
+    {% if jobs|length == 0 or jobs|dictsort:"id"|join:"" == request.user.userprofile.applied_jobs.all|dictsort:"id"|join:"" %}
+    <div class="no-jobs-message">
+        <p>No more jobs to apply to.</p>
     </div>
+    {% else %}
+        <!-- Loop through all jobs -->
+        {% for job in jobs %}
+        {% if job not in request.user.userprofile.applied_jobs.all %}
+        <div class="job-item" data-job-id="{{ job.id }}">
+            {% if request.user == job.host %}
+            <a href="{% url 'update-Job' job.id %}">Edit</a>
+            <a href="{% url 'delete-Job' job.id %}">Delete</a>
+            {% endif %}
+
+            <a href="{% url 'user-profile' job.host.id %}">Company: {{ job.host.username }}</a>
+            <h5>{{ job.id }} -- <a href="{% url 'job' job.id %}">Position: {{ job.name }}</a></h5>
+            <small>{{ job.field.name }}</small>
+
+            {% if job.host.userprofile and job.host.userprofile.profile_picture %}
+            <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
+            {% else %}
+            <img src="{% static 'default.jpg' %}" alt="Company Logo">
+            {% endif %}
+            <hr>
+        </div>
+        {% endif %}
+        {% endfor %}
     {% endif %}
-    {% endfor %}
 
     <div>
         <button class="swipeButton" id="rightButton">✓</button>
@@ -42,22 +49,28 @@ const acceptBut = document.querySelector('#rightButton');
 let currentJobIndex = jobItems.length - 1;
 
 // Initialize Buttons
+if (jobItems.length > 0) {
+    jobItems[currentJobIndex].classList.add('active');
+}
+
 denyBut.onclick = denyApp;
 acceptBut.onclick = acceptApp;
 
-jobItems[currentJobIndex].classList.add('active');
-
 // Deny Function
 function denyApp() {
+    if (jobItems.length === 0) return;
     jobItems[currentJobIndex].classList.remove('active');
     jobItems[currentJobIndex].remove();  
 
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
-    jobItems[currentJobIndex].classList.add('active');
+    if (jobItems.length > 0) {
+        jobItems[currentJobIndex].classList.add('active');
+    }
 }
 
 // Accept Function
 function acceptApp() {
+    if (jobItems.length === 0) return;
     const jobId = jobItems[currentJobIndex].dataset.jobId;
 
     fetch(`/apply-job/`, {
@@ -71,8 +84,11 @@ function acceptApp() {
         if (response.ok) {
             jobItems[currentJobIndex].classList.remove('active');
             jobItems[currentJobIndex].remove();
+            
             currentJobIndex = (currentJobIndex + 1) % jobItems.length;
-            jobItems[currentJobIndex].classList.add('active');
+            if (jobItems.length > 0) {
+                jobItems[currentJobIndex].classList.add('active');
+            }
         } else {
             alert('Error applying to job');
         }
