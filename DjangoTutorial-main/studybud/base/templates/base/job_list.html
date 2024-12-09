@@ -6,57 +6,94 @@
         <button class="swipeButton" id="leftButton">X</button>
     </div>
 
-    <!-- Loop through all jobs -->
-    {% for job in jobs %}
-    <div class="job-item" data-job-id="{{ job.id }}">
-        {% if request.user == job.host %}
-        <a href="{% url 'update-Job' job.id %}">Edit</a>
-        <a href="{% url 'delete-Job' job.id %}">Delete</a>
-        {% endif %}
-
-        <a href="{% url 'user-profile' job.host.id %}">Company: {{ job.host.username }}</a>
-        <h5>{{ job.id }} -- <a href="{% url 'job' job.id %}">Position: {{ job.name }}</a></h5>
-        <small>{{ job.field.name }}</small>
-
-        {% if job.host.userprofile and job.host.userprofile.profile_picture %}
-        <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
-        {% else %}
-        <img src="{% static 'default.jpg' %}" alt="Company Logo">
-        {% endif %}
-        <hr>
+    <!-- Check if there are any jobs to display -->
+    {% if jobs|length == 0 or jobs|dictsort:"id"|join:"" == request.user.userprofile.applied_jobs.all|dictsort:"id"|join:"" %}
+    <div class="no-jobs-message">
+        <p>No more jobs to apply to.</p>
     </div>
-    {% endfor %}
+    {% else %}
+        <!-- Loop through all jobs -->
+        {% for job in jobs %}
+        {% if job not in request.user.userprofile.applied_jobs.all %}
+        <div class="job-item" data-job-id="{{ job.id }}">
+            {% if request.user == job.host %}
+            <a href="{% url 'update-Job' job.id %}">Edit</a>
+            <a href="{% url 'delete-Job' job.id %}">Delete</a>
+            {% endif %}
+
+            <a href="{% url 'user-profile' job.host.id %}">Company: {{ job.host.username }}</a>
+            <h5>{{ job.id }} -- <a href="{% url 'job' job.id %}">Position: {{ job.name }}</a></h5>
+            <small>{{ job.field.name }}</small>
+
+            {% if job.host.userprofile and job.host.userprofile.profile_picture %}
+            <img src="{{ job.host.userprofile.profile_picture.url }}" alt="Company Logo">
+            {% else %}
+            <img src="{% static 'default.jpg' %}" alt="Company Logo">
+            {% endif %}
+            <hr>
+        </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
 
     <div>
         <button class="swipeButton" id="rightButton">✓</button>
     </div>
 </div>
 
+<div id="emptyContainer">
+    <h2>Looks like you are all caught up!</h2>
+    <p>There are currently no other listings right now.</p>
+    <p>Check back later!</p>
+</div>
+
 <script>
 // Variables
-const jobItems = document.querySelectorAll('.job-item');
+const jobContainer = document.getElementById('job-container');
 const denyBut = document.querySelector('#leftButton');
 const acceptBut = document.querySelector('#rightButton');
+let jobItems = document.querySelectorAll('.job-item');
 let currentJobIndex = jobItems.length - 1;
 
 // Initialize Buttons
+if (jobItems.length > 0) {
+    jobItems[currentJobIndex].classList.add('active');
+}
+
 denyBut.onclick = denyApp;
 acceptBut.onclick = acceptApp;
 
-jobItems[currentJobIndex].classList.add('active');
+
+
+
+if (jobItems.length === 0) {
+    jobContainer.style.display = 'none'; 
+    emptyContainer.style.display = 'block'; 
+} else {
+    jobItems[currentJobIndex].classList.add('active');
+}
 
 // Deny Function
 function denyApp() {
+    if (currentJobIndex == 0) {
+        isEmpty();
+    }
     jobItems[currentJobIndex].classList.remove('active');
     jobItems[currentJobIndex].remove();  
-
     currentJobIndex = (currentJobIndex + 1) % jobItems.length;
     jobItems[currentJobIndex].classList.add('active');
+    updateJobItems()
+    isEmpty();
 }
 
 // Accept Function
 function acceptApp() {
+    if (jobItems.length === 0) return;
     const jobId = jobItems[currentJobIndex].dataset.jobId;
+
+    if (currentJobIndex == 0) {
+        isEmpty();
+    }
 
     fetch(`/apply-job/`, {
         method: 'POST',
@@ -69,11 +106,31 @@ function acceptApp() {
         if (response.ok) {
             jobItems[currentJobIndex].classList.remove('active');
             jobItems[currentJobIndex].remove();
+            
             currentJobIndex = (currentJobIndex + 1) % jobItems.length;
-            jobItems[currentJobIndex].classList.add('active');
+            if (jobItems.length > 0) {
+                jobItems[currentJobIndex].classList.add('active');
+            }
         } else {
             alert('Error applying to job');
         }
     });
+    updateJobItems()
+    isEmpty();
+}
+
+function updateJobItems() {
+    jobItems = document.querySelectorAll('.job-item');
+    console.log("Updated");
+}
+
+function isEmpty() { 
+    if (jobItems.length == 1) {
+        jobContainer.style.display = 'none';
+        emptyContainer.style.display = 'block';
+        console.log("Empty")
+    }
+    console.log("False");
+    console.log(jobItems);
 }
 </script>
