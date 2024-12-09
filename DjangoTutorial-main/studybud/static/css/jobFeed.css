@@ -31,14 +31,11 @@
 .job-item.active {
   display: block;
 }
-#emptyContainer{
-  display: none;
-}
 .job-container > div {
 width:20% 60% 20%;
 }
 #emptyContainer{
-  display: block;
+  display: none;
   text-align: center;
   border: 1px solid black;
   height: 200px;
