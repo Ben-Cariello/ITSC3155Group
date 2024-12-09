@@ -106,4 +106,4 @@ class ProfilePictureForm(forms.ModelForm):
 class JobForm(ModelForm):
     class Meta:
         model = Job
-        fields = '__all__'
+        fields = ['name', 'host', 'description']
